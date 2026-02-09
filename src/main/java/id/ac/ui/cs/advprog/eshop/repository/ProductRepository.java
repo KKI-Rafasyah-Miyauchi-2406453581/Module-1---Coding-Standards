@@ -20,7 +20,6 @@ public class ProductRepository {
         return productData.iterator();
     }
 
-    // New: Find a product by ID
     public Product findById(String id) {
         for (Product product : productData) {
             if (product.getProductId().equals(id)) {
@@ -30,7 +29,6 @@ public class ProductRepository {
         return null;
     }
 
-    // New: Update an existing product
     public Product update(Product product) {
         for (int i = 0; i < productData.size(); i++) {
             if (productData.get(i).getProductId().equals(product.getProductId())) {

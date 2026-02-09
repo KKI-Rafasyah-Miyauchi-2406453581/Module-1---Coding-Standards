@@ -36,7 +36,6 @@ public class ProductController {
         return "productList";
     }
 
-    // New: Page for editing a product
     @GetMapping("/edit/{id}")
     public String editProductPage(@PathVariable String id, Model model) {
         Product product = service.findById(id);
@@ -44,7 +43,6 @@ public class ProductController {
         return "editProduct";
     }
 
-    // New: Action to save edited product
     @PostMapping("/edit")
     public String editProductPost(@ModelAttribute Product product) {
         service.update(product);
