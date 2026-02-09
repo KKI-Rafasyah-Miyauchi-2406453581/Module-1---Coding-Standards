@@ -1,1 +1,5 @@
-# Module-1---Coding-Standards
+# Module 1 - Coding-Standards
+## Reflection
+After working on the Edit and Delete features for the EShop application, I’ve had a chance to evaluate my code against the standards we’ve been learning. I tried to stick to Clean Code principles by keeping my methods small and focused on one specific task, like how the ProductRepository has distinct methods for findById, update, and delete. I also made sure my naming conventions were clear and descriptive so that anyone reading the code could immediately understand that productData is our in-memory storage. By using the Layered Architecture (separating the Controller, Service, and Repository), the logic stays organized and isn't all cluttered in one place.
+
+In terms of Secure Coding, I focused on basic data integrity and flow control. For example, when implementing the edit feature, I used a hidden ID field in the HTML form to ensure the backend correctly maps the update to the right product. I also added a confirmation check on the delete button to prevent accidental data loss. One thing I think I could improve is adding more robust validation; right now, the system might accept empty strings or negative numbers for quantities. Moving forward, I want to look into using Spring Boot's validation annotations to make the application even more secure and reliable.
