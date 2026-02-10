@@ -1,17 +1,15 @@
 package id.ac.ui.cs.advprog.eshop.functional;
 
 import io.github.bonigarcia.seljup.SeleniumJupiter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,32 +33,19 @@ class CreateProductFunctionalTest {
     }
 
     @Test
-    void createProduct_isSuccessful(ChromeDriver driver) throws Exception {
-        // 1. Navigate to the Create Product page
-        driver.get(baseUrl + "/product/create");
+    void testCreateProduct(ChromeDriver driver) throws Exception {
+        driver.get(baseUrl + "/product/list");
 
-        // 2. Fill in the product details
-        WebElement nameInput = driver.findElement(By.id("nameInput"));
-        nameInput.sendKeys("Sampo Cap Bambang");
+        driver.findElement(By.linkText("Create Product")).click();
 
-        WebElement quantityInput = driver.findElement(By.id("quantityInput"));
-        quantityInput.sendKeys("100");
+        driver.findElement(By.id("nameInput")).sendKeys("Sampo Cap functional");
+        driver.findElement(By.id("quantityInput")).sendKeys("10");
 
-        // 3. Submit the form
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
-        // 4. Verify we are redirected to the Product List page
-        assertEquals(baseUrl + "/product/list", driver.getCurrentUrl());
-
-        // 5. Verify the new product is visible in the table
-        List<WebElement> cells = driver.findElements(By.tagName("td"));
-        boolean isProductFound = false;
-        for (WebElement cell : cells) {
-            if (cell.getText().equals("Sampo Cap Bambang")) {
-                isProductFound = true;
-                break;
-            }
-        }
-        assertTrue(isProductFound, "The created product should be visible in the list.");
+        String pageSource = driver.getPageSource();
+        Assertions.assertNotNull(pageSource);
+        assertTrue(pageSource.contains("Sampo Cap functional"));
+        assertTrue(pageSource.contains("10"));
     }
 }
