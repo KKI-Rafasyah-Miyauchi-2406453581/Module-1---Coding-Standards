@@ -1,7 +1,6 @@
-package repository;
+package id.ac.ui.cs.advprog.eshop.repository;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +22,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void testCreateAndFindAll() {
+    void testCreateAndFind() {
         Product product = new Product();
         product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
@@ -53,7 +52,7 @@ class ProductRepositoryTest {
         productRepository.create(product1);
 
         Product product2 = new Product();
-        product2.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9096");
+        product2.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9896");
         product2.setProductName("Sampo Cap Usep");
         product2.setProductQuantity(50);
         productRepository.create(product2);
@@ -70,56 +69,67 @@ class ProductRepositoryTest {
     @Test
     void testEditProductPositive() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9896");
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
         productRepository.create(product);
 
-        Product editedProduct = new Product();
-        editedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        editedProduct.setProductName("Sampo Cap Usep");
-        editedProduct.setProductQuantity(50);
-        productRepository.update(editedProduct);
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("a0f9de46-90b1-437d-a0bf-d0821dde9896");
+        updatedProduct.setProductName("Sampo Cap Baru");
+        updatedProduct.setProductQuantity(200);
+        productRepository.update(updatedProduct);
 
-        Product result = productRepository.findById(editedProduct.getProductId());
-        assertEquals("Sampo Cap Usep", result.getProductName());
-        assertEquals(50, result.getProductQuantity());
+        Product result = productRepository.findById(product.getProductId());
+        assertEquals("Sampo Cap Baru", result.getProductName());
+        assertEquals(200, result.getProductQuantity());
     }
 
     @Test
     void testEditProductNegative() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductId("valid-id");
+        product.setProductName("Original Name");
+        product.setProductQuantity(10);
         productRepository.create(product);
 
         Product nonExistentProduct = new Product();
         nonExistentProduct.setProductId("invalid-id");
-        nonExistentProduct.setProductName("Ghost Product");
-
+        nonExistentProduct.setProductName("New Name");
+        nonExistentProduct.setProductQuantity(20);
         Product result = productRepository.update(nonExistentProduct);
+
         assertNull(result);
+        Product original = productRepository.findById("valid-id");
+        assertEquals("Original Name", original.getProductName());
     }
 
     @Test
     void testDeleteProductPositive() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductId("delete-me-id");
+        product.setProductName("To Be Deleted");
+        product.setProductQuantity(5);
         productRepository.create(product);
 
-        productRepository.delete("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        Product result = productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        assertNull(result);
+        productRepository.delete("delete-me-id");
+
+        Iterator<Product> iterator = productRepository.findAll();
+        assertFalse(iterator.hasNext());
     }
 
     @Test
     void testDeleteProductNegative() {
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductId("keep-me-id");
+        product.setProductName("Safe Product");
+        product.setProductQuantity(10);
         productRepository.create(product);
 
-        // Deleting non-existent ID should not affect existing data
-        productRepository.delete("invalid-id");
-        Product result = productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        assertNotNull(result);
+        productRepository.delete("non-existent-id");
+
+        Iterator<Product> iterator = productRepository.findAll();
+        assertTrue(iterator.hasNext());
+        assertEquals("keep-me-id", iterator.next().getProductId());
     }
 }
