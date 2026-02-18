@@ -65,4 +65,80 @@ class ProductRepositoryTest {
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
     }
+
+    @Test
+    void testEditProduct() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        updatedProduct.setProductName("Sampo Cap Bango");
+        updatedProduct.setProductQuantity(200);
+        productRepository.update(updatedProduct);
+
+        Product retrievedProduct = productRepository.findById(updatedProduct.getProductId());
+        assertNotNull(retrievedProduct);
+        assertEquals("Sampo Cap Bango", retrievedProduct.getProductName());
+        assertEquals(200, retrievedProduct.getProductQuantity());
+    }
+
+    @Test
+    void testEditProductNotFound() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product nonExistentProduct = new Product();
+        nonExistentProduct.setProductId("non-existent-id");
+        nonExistentProduct.setProductName("Sampo Cap Bango");
+        nonExistentProduct.setProductQuantity(200);
+
+        Product result = productRepository.update(nonExistentProduct);
+
+        assertNull(result);
+
+        Product originalProduct = productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        assertEquals("Sampo Cap Bambang", originalProduct.getProductName());
+    }
+
+    @Test
+    void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        productRepository.delete(product.getProductId());
+
+        Product deletedProduct = productRepository.findById(product.getProductId());
+        assertNull(deletedProduct);
+
+        Iterator<Product> iterator = productRepository.findAll();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void testDeleteProductNotFound() {
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        productRepository.delete("random-id-that-does-not-exist");
+
+        Product existingProduct = productRepository.findById(product.getProductId());
+        assertNotNull(existingProduct);
+        assertEquals("Sampo Cap Bambang", existingProduct.getProductName());
+
+        Iterator<Product> iterator = productRepository.findAll();
+        assertTrue(iterator.hasNext());
+    }
 }
