@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ADV Shop</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container jumbotron mt-5">
+  <h3>Welcome</h3>
+  <p class="lead">Homepage</p>
+  <hr class="my-4">
+  <p>Click below to manage your products.</p>
+  <a class="btn btn-primary btn-lg" th:href="@{/product/list}" role="button">View Product List</a>
+</div>
+</body>
+</html>
