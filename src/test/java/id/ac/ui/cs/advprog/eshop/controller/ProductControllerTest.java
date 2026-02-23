@@ -73,4 +73,30 @@ class ProductControllerTest {
 
         verify(productService, times(1)).delete("123");
     }
+
+    @Test
+    void testEditProductPage() throws Exception {
+        Product mockProduct = new Product();
+        mockProduct.setProductId("123");
+        mockProduct.setProductName("Test Product");
+
+        when(productService.findById("123")).thenReturn(mockProduct);
+
+        mockMvc.perform(get("/product/edit/123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("editProduct"))
+                .andExpect(model().attributeExists("product"));
+    }
+
+    @Test
+    void testEditProductPost() throws Exception {
+        mockMvc.perform(post("/product/edit")
+                        .param("productId", "123")
+                        .param("productName", "Updated Product")
+                        .param("productQuantity", "20"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("list"));
+
+        verify(productService, times(1)).update(any(Product.class));
+    }
 }
