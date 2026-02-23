@@ -1,0 +1,46 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java toolchain
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "gradle"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build the application (Create JAR)
+        run: ./gradlew clean bootJar
+
+      - name: Generate Deployment Package Name
+        id: generate-name
+        run: echo "DEPLOY_JAR=eshop-${{ github.sha }}.jar" >> $GITHUB_ENV
+
+      - name: Rename JAR for Deployment
+        run: mv build/libs/*.jar ${{ env.DEPLOY_JAR }}
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
+          region: ${{ secrets.AWS_REGION }}
+          application_name: eshop
+          environment_name: Eshop-env
+          version_label: ${{ env.DEPLOY_JAR }}
+          deployment_package: ${{ env.DEPLOY_JAR }}
