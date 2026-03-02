@@ -14,3 +14,25 @@ After implementing the CI/CD pipelines using GitHub Actions, I can really see th
 
 Setting up Continuous Deployment to AWS Elastic Beanstalk was a bit challenging but incredibly rewarding. I learned that cloud environments have their own specific configurations, like how the Elastic Beanstalk Nginx proxy routes traffic to port 5000 by default, causing a 502 Bad Gateway error when my Spring Boot app was listening on port 8080. Fixing that and successfully automating the deployment means I no longer have to manually build and upload .jar files. 
 
+## Reflection 4
+### 1) Explain what principles you apply to your project!
+For this exercise, I basically applied three SOLID principles to clean up my code:
+
+- **Single Responsibility Principle (SRP):** Initially, I had the `CarController` class just sitting at the bottom of my `ProductController.java` file. I thought it would be better to separate them into two completely different files. So now, `ProductController` only deals with products, and `CarController` strictly handles car-related routing. This way, each class basically only has one reason to change.
+- **Liskov Substitution Principle (LSP):** My original code had `class CarController extends ProductController`, which I realized is a violation because a car controller really isn't a valid substitute for a product controller. I just removed the inheritance so `CarController` can stand on its own.
+- **Dependency Inversion Principle (DIP):** In the `CarController`, the service was originally injected using the concrete class `CarServiceImpl`. I changed this to use the `CarService` interface instead. In my opinion, this is much better since the high-level module now depends on an abstraction rather than the low-level implementation details.
+
+### 2) Explain the advantages of applying SOLID principles to your project with examples.
+I think applying these principles makes the codebase way cleaner, more modular, and honestly much easier to maintain over time.
+
+For example, by using **SRP**, my files are smaller and more focused. If I need to fix a bug with how cars are edited, I know exactly where to look (`CarController.java`) without having to scroll past a bunch of unrelated product code.
+
+Also, with **DIP**, the code is basically much more flexible. Since `CarController` now relies on the `CarService` interface, we could completely swap out the backend logic for managing cars later on (like saving to a real database instead of a local list). As long as the new implementation follows the interface, we wouldn't have to change a single line of code in the controller, which is pretty cool.
+
+### 3) Explain the disadvantages of not applying SOLID principles to your project with examples.
+In my opinion, without SOLID principles, the code quickly becomes fragile, tightly coupled, and a total headache to update.
+
+For instance, if I ignored **LSP** and kept `CarController extends ProductController`, the car controller would accidentally inherit all the product routes. This could cause really weird routing clashes and unexpected bugs when trying to navigate the app.
+
+Also, if I didn't use **SRP**, the `ProductController` file would eventually turn into a massive "god class." If I kept adding more features later (like users, orders, etc.) into the exact same file, it would become practically impossible to read. Plus, if multiple people tried to work on different features at the same time for a group project, we would constantly run into merge conflicts.
+
