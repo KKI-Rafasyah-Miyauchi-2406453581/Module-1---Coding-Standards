@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/car")
 public class CarController {
 
-    // I utilized DIP here by using the interface CarService instead of CarServiceImpl
+    // I utilized DIP here by using the interface CarService instead of CarServiceImpl.
     @Autowired
     private CarService carservice;
 
