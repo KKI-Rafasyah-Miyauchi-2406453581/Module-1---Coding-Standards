@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.eshop.model.Payment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,5 +45,19 @@ class PaymentRepositoryTest {
 
         assertEquals("REJECTED", result.getStatus());
         assertEquals("CASH", result.getMethod());
+    }
+
+    @Test
+    void testFindAll() {
+        paymentRepository.save(payment);
+
+        Map<String, String> data2 = new HashMap<>();
+        data2.put("address", "Jalan Margonda");
+        data2.put("deliveryFee", "10000");
+        Payment paymentCod = new Payment("2", "CASH_ON_DELIVERY", data2);
+        paymentRepository.save(paymentCod);
+
+        List<Payment> paymentList = paymentRepository.findAll();
+        assertEquals(2, paymentList.size());
     }
 }

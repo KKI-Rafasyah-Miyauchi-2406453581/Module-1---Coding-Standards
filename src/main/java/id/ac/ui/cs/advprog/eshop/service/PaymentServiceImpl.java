@@ -2,13 +2,13 @@ package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
-import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
+import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -20,29 +20,35 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        String status = "REJECTED";
-
-        if (method.equals("VOUCHER")) {
-            String voucherCode = paymentData.get("voucherCode");
-            if (voucherCode != null && voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
-                int numCount = 0;
-                for (char c : voucherCode.toCharArray()) {
-                    if (Character.isDigit(c)) numCount++;
-                }
-                if (numCount == 8) status = "SUCCESS";
-            }
-        }
-
         Payment payment = new Payment(order.getId(), method, paymentData);
         return paymentRepository.save(payment);
     }
 
     @Override
-    public Payment setStatus(Payment payment, String status) { return null; }
+    public Payment setStatus(Payment payment, String status) {
+        payment.setStatus(status);
+        paymentRepository.save(payment);
+
+        Order order = orderRepository.findById(payment.getId());
+        if (order != null) {
+            if (status.equals("SUCCESS")) {
+                order.setStatus("SUCCESS");
+            } else if (status.equals("REJECTED")) {
+                order.setStatus("FAILED");
+            }
+            orderRepository.save(order);
+        }
+
+        return payment;
+    }
 
     @Override
-    public Payment getPayment(String paymentId) { return null; }
+    public Payment getPayment(String paymentId) {
+        return paymentRepository.findById(paymentId);
+    }
 
     @Override
-    public List<Payment> getAllPayments() { return null; }
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
 }
