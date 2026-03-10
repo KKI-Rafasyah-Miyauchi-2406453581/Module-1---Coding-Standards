@@ -19,7 +19,7 @@ public class Payment {
         this.id = id;
         this.method = method;
         this.paymentData = paymentData;
-        this.status = "REJECTED"; // Default
+        this.status = "REJECTED";
 
         if (method.equals("VOUCHER")) {
             String code = paymentData.get("voucherCode");
@@ -34,7 +34,13 @@ public class Payment {
                     this.status = "SUCCESS";
                 }
             }
+        } else if (method.equals("CASH_ON_DELIVERY")) {
+            String address = paymentData.get("address");
+            String deliveryFee = paymentData.get("deliveryFee");
+
+            if (address != null && !address.isEmpty() && deliveryFee != null && !deliveryFee.isEmpty()) {
+                this.status = "SUCCESS";
+            }
         }
     }
-
 }

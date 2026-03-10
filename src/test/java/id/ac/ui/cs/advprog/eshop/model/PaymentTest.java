@@ -64,7 +64,7 @@ class PaymentTest {
     void testCreatePaymentCodRejectedEmptyDeliveryFee() {
         Map<String, String> codData = new HashMap<>();
         codData.put("address", "Jalan Margonda Raya");
-        codData.put("deliveryFee", ""); // Empty delivery fee
+        codData.put("deliveryFee", "");
 
         Payment payment = new Payment("2", "CASH_ON_DELIVERY", codData);
         assertEquals("REJECTED", payment.getStatus());
