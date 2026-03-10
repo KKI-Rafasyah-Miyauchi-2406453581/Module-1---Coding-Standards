@@ -1,20 +1,20 @@
 # MODULE 1 - REFLECTIONS
-## Reflection 1
+## Reflection 1 (Module 1)
 After working on the Edit and Delete features for the EShop application, I’ve had a chance to evaluate my code against the standards we’ve been learning. I tried to stick to Clean Code principles by keeping my methods small and focused on one specific task, like how the ProductRepository has distinct methods for findById, update, and delete. I also made sure my naming conventions were clear and descriptive so that anyone reading the code could immediately understand that productData is our in-memory storage. By using the Layered Architecture (separating the Controller, Service, and Repository), the logic stays organized and isn't all cluttered in one place.
 
 In terms of Secure Coding, I focused on basic data integrity and flow control. For example, when implementing the edit feature, I used a hidden ID field in the HTML form to ensure the backend correctly maps the update to the right product. I also added a confirmation check on the delete button to prevent accidental data loss. One thing I think I could improve is adding more robust validation; right now, the system might accept empty strings or negative numbers for quantities. Moving forward, I want to look into using Spring Boot's validation annotations to make the application even more secure and reliable.
 
-## Reflection 2  
+## Reflection 2  (Module 2)
 After writing the unit tests for the Edit and Delete features, I’ve realized that while writing tests can feel a bit repetitive, it really gives me peace of mind knowing the core logic actually works without having to manually check it every time. I think the number of unit tests in a class should be enough to cover all possible execution paths, both the "happy path" where everything goes right and the edge cases where things might fail. To make sure my tests are enough, I look at code coverage, which shows me exactly which lines of my code were executed during the tests. However, having 100% code coverage doesn't automatically mean the code is bug-free; it just means every line was run. It doesn't guarantee that I've tested every possible logical combination or weird user input.
 
 Regarding the functional tests, creating a new test suite for the product list quantity by copying the same setup procedures and instance variables from CreateProductFunctionalTest.java definitely creates a code duplication issue. While it's faster to just copy-paste, it reduces the overall code quality because any change to the setup logic (like a URL change) would have to be updated in multiple places. This is a "clean code" violation. To improve this, I could create a base test class that contains the common setup procedures and then have both functional test classes inherit from it. This way, the code remains DRY (Don't Repeat Yourself) and much easier to maintain in the long run.
 
-## Reflection 3
+## Reflection 3 (Module 2)
 After implementing the CI/CD pipelines using GitHub Actions, I can really see the value of automating the testing and deployment processes. Integrating SonarCloud was a great learning experience for maintaining clean and secure code. It immediately caught a security hotspot regarding dependency verification, which I fixed by generating a verification-metadata.xml file. I also spent time ensuring my unit tests covered all execution paths, finally achieving 100% code coverage with JaCoCo by adding tests for edge cases, like creating a product without an ID or searching for a non-existent product. Having these automated checks run on every push gives me a lot of confidence that new features won't break existing logic.
 
 Setting up Continuous Deployment to AWS Elastic Beanstalk was a bit challenging but incredibly rewarding. I learned that cloud environments have their own specific configurations, like how the Elastic Beanstalk Nginx proxy routes traffic to port 5000 by default, causing a 502 Bad Gateway error when my Spring Boot app was listening on port 8080. Fixing that and successfully automating the deployment means I no longer have to manually build and upload .jar files. 
 
-## Reflection 4
+## Reflection 4 (Module 3)
 ### 1) Explain what principles you apply to your project!
 For this exercise, I basically applied three SOLID principles to clean up my code:
 
@@ -36,3 +36,9 @@ For instance, if I ignored **LSP** and kept `CarController extends ProductContro
 
 Also, if I didn't use **SRP**, the `ProductController` file would eventually turn into a massive "god class." If I kept adding more features later (like users, orders, etc.) into the exact same file, it would become practically impossible to read. Plus, if multiple people tried to work on different features at the same time for a group project, we would constantly run into merge conflicts.
 
+## Reflection 4 (Module 4)
+### 1) TTD Principles
+Reflecting on Percival's (2017) questions about evaluating testing objectives, I found the TDD workflow to be highly useful because it forced me to clearly define the expected behavior of the Payment and Order features before writing any actual logic. By starting with the RED phase, I knew exactly what edge cases I was targeting, like missing delivery fees, and the GREEN phase gave me immediate confidence that my code actually worked. However, I noticed that I often rushed the REFACTOR phase just to keep moving forward. Next time I write more tests, I need to be more intentional about evaluating the design of my code during the refactoring stage, ensuring that the tests aren't just passing, but actually driving cleaner, more maintainable architecture.
+
+### 2) F.I.R.S.T Principles
+Regarding the unit tests I created, I feel they successfully hit most of the F.I.R.S.T. principles since they are Fast (running in memory without a real database), Independent (using @BeforeEach to isolate data), Repeatable, and Self-Validating with clear assertions. Where I struggled a bit was with the "Timely" principle; even though I stuck to TDD for this specific exercise, it still felt a bit unnatural compared to my usual habit of writing the implementation first and tests later just to hit coverage metrics. The next time I create more tests, I need to strictly enforce the habit of writing them in a timely manner, right before the production code, so they actually guide the development process instead of just feeling like a chore at the end.
