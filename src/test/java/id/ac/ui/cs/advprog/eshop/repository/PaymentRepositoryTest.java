@@ -31,4 +31,18 @@ class PaymentRepositoryTest {
     void testFindByIdNotFound() {
         assertNull(paymentRepository.findById("non-existent-id"));
     }
+
+    @Test
+    void testSaveUpdate() {
+        paymentRepository.save(payment);
+        Map<String, String> newData = new HashMap<>();
+        newData.put("address", "Jakarta");
+        Payment updatedPayment = new Payment("1", "CASH", "REJECTED", newData);
+
+        paymentRepository.save(updatedPayment);
+        Payment result = paymentRepository.findById("1");
+
+        assertEquals("REJECTED", result.getStatus());
+        assertEquals("CASH", result.getMethod());
+    }
 }
