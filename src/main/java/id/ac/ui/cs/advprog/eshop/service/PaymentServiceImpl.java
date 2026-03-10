@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
-        Payment payment = new Payment(order.getId(), method, status, paymentData);
+        Payment payment = new Payment(order.getId(), method, paymentData);
         return paymentRepository.save(payment);
     }
 
