@@ -19,7 +19,23 @@ public class PaymentServiceImpl implements PaymentService {
     private OrderRepository orderRepository;
 
     @Override
-    public Payment addPayment(Order order, String method, Map<String, String> paymentData) { return null; }
+    public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
+        String status = "REJECTED";
+
+        if (method.equals("VOUCHER")) {
+            String voucherCode = paymentData.get("voucherCode");
+            if (voucherCode != null && voucherCode.length() == 16 && voucherCode.startsWith("ESHOP")) {
+                int numCount = 0;
+                for (char c : voucherCode.toCharArray()) {
+                    if (Character.isDigit(c)) numCount++;
+                }
+                if (numCount == 8) status = "SUCCESS";
+            }
+        }
+
+        Payment payment = new Payment(order.getId(), method, status, paymentData);
+        return paymentRepository.save(payment);
+    }
 
     @Override
     public Payment setStatus(Payment payment, String status) { return null; }
