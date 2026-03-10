@@ -19,28 +19,33 @@ public class Payment {
         this.id = id;
         this.method = method;
         this.paymentData = paymentData;
-        this.status = "REJECTED";
+        this.status = "REJECTED"; // Default
 
         if (method.equals("VOUCHER")) {
-            String code = paymentData.get("voucherCode");
-            if (code != null && code.length() == 16 && code.startsWith("ESHOP")) {
-                int numCount = 0;
-                for (char c : code.toCharArray()) {
-                    if (Character.isDigit(c)) {
-                        numCount++;
-                    }
-                }
-                if (numCount == 8) {
-                    this.status = "SUCCESS";
-                }
+            if (validateVoucher(paymentData.get("voucherCode"))) {
+                this.status = "SUCCESS";
             }
         } else if (method.equals("CASH_ON_DELIVERY")) {
-            String address = paymentData.get("address");
-            String deliveryFee = paymentData.get("deliveryFee");
-
-            if (address != null && !address.isEmpty() && deliveryFee != null && !deliveryFee.isEmpty()) {
+            if (validateCod(paymentData.get("address"), paymentData.get("deliveryFee"))) {
                 this.status = "SUCCESS";
             }
         }
+    }
+
+    private boolean validateVoucher(String code) {
+        if (code == null || code.length() != 16 || !code.startsWith("ESHOP")) {
+            return false;
+        }
+        int numCount = 0;
+        for (char c : code.toCharArray()) {
+            if (Character.isDigit(c)) {
+                numCount++;
+            }
+        }
+        return numCount == 8;
+    }
+
+    private boolean validateCod(String address, String deliveryFee) {
+        return address != null && !address.isEmpty() && deliveryFee != null && !deliveryFee.isEmpty();
     }
 }
