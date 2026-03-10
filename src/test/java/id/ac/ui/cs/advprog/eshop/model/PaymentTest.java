@@ -23,4 +23,11 @@ class PaymentTest {
         assertEquals("SUCCESS", payment.getStatus());
         assertEquals(this.paymentData, payment.getPaymentData());
     }
+
+    @Test
+    void testCreatePaymentEmptyData() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Payment("1", "VOUCHER", "SUCCESS", new HashMap<>());
+        });
+    }
 }

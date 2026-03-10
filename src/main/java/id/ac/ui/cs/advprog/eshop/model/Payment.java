@@ -5,11 +5,19 @@ import java.util.Map;
 
 @Getter
 public class Payment {
-    String id;
-    String method;
-    String status;
-    Map<String, String> paymentData;
+    private String id;
+    private String method;
+    private String status;
+    private Map<String, String> paymentData;
 
     public Payment(String id, String method, String status, Map<String, String> paymentData) {
+        this.id = id;
+        this.method = method;
+        this.status = status;
+
+        if (paymentData == null || paymentData.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        this.paymentData = paymentData;
     }
 }
