@@ -50,7 +50,7 @@ class PaymentServiceImplTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP1234ABC5678");
 
-        Payment payment = new Payment("1", "VOUCHER", "SUCCESS", paymentData);
+        Payment payment = new Payment("1", "VOUCHER", paymentData);
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
 
         Payment result = paymentService.addPayment(order, "VOUCHER", paymentData);
@@ -64,7 +64,7 @@ class PaymentServiceImplTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "INVALID");
 
-        Payment payment = new Payment("1", "VOUCHER", "REJECTED", paymentData);
+        Payment payment = new Payment("1", "VOUCHER", paymentData);
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
 
         Payment result = paymentService.addPayment(order, "VOUCHER", paymentData);
