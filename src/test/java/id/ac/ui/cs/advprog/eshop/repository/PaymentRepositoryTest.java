@@ -16,7 +16,7 @@ class PaymentRepositoryTest {
         paymentRepository = new PaymentRepository();
         Map<String, String> data = new HashMap<>();
         data.put("voucherCode", "ESHOP1234ABC5678");
-        payment = new Payment("1", "VOUCHER", "SUCCESS", data);
+        payment = new Payment("1", "VOUCHER", data);
     }
 
     @Test
@@ -37,7 +37,7 @@ class PaymentRepositoryTest {
         paymentRepository.save(payment);
         Map<String, String> newData = new HashMap<>();
         newData.put("address", "Jakarta");
-        Payment updatedPayment = new Payment("1", "CASH", "REJECTED", newData);
+        Payment updatedPayment = new Payment("1", "CASH", newData);
 
         paymentRepository.save(updatedPayment);
         Payment result = paymentRepository.findById("1");

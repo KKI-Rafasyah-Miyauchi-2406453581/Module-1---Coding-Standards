@@ -17,7 +17,7 @@ class PaymentTest {
 
     @Test
     void testCreatePayment() {
-        Payment payment = new Payment("1", "VOUCHER", "SUCCESS", this.paymentData);
+        Payment payment = new Payment("1", "VOUCHER", this.paymentData);
         assertEquals("1", payment.getId());
         assertEquals("VOUCHER", payment.getMethod());
         assertEquals("SUCCESS", payment.getStatus());
@@ -27,7 +27,7 @@ class PaymentTest {
     @Test
     void testCreatePaymentEmptyData() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Payment("1", "VOUCHER", "SUCCESS", new HashMap<>());
+            new Payment("1", "VOUCHER", new HashMap<>());
         });
     }
 }
